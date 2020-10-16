@@ -1,0 +1,64 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+  gather_facts: true
+  vars_files:
+    - vars/default.yaml
+
+  tasks:
+    # Install aptitude, which is preferred by Ansible as an alternative to the apt package manager.
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'git', 'make', 'vim', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        # repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Add remote "ubuntu" user to "docker" group
+      remote_user: root
+      user:
+        name: ubuntu
+        group: docker
+        append: yes
+      tags:
+        - docker
+
+    - name: Install docker-compose
+      remote_user: root
+      get_url: 
+        url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+
+    # - name: Pull default Docker image
+    #   docker_image:
+    #     name: "{{ default_container_image }}"
+    #     source: pull
+
+    # # Creates the number of containers defined by the variable create_containers, using values from vars file
+    # - name: Create default containers
+    #   docker_container:
+    #     name: "{{ default_container_name }}{{ item }}"
+    #     image: "{{ default_container_image }}"
+    #     command: "{{ default_container_command }}"
+    #     state: present
+    #   with_sequence: count={{ create_containers }}

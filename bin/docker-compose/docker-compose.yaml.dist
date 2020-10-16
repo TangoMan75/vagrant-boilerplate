@@ -1,0 +1,38 @@
+#/**
+# * TangoMan dockerized-ghost.yaml
+# *
+# * @version  0.1.0
+# * @author   "Matthias Morin" <mat@tangoman.io>
+# * @licence  MIT
+# * @link     https://gist.github.com/TangoMan75/b6010651d0711e860ea6284369d2eb3f
+# */
+
+version: '3'
+services:
+    mysql:
+        image: mysql:5.7
+        volumes:
+            - mysql_data:/var/lib/mysql
+        restart: always
+        expose:
+            - '3306'
+        ports:
+            - '3306:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE:      ghost
+            MYSQL_USER:          ghostuser
+            MYSQL_PASSWORD:      ocrpassword
+
+    ghost:
+        depends_on:
+            - mysql
+        image: ghost:latest
+        ports:
+            - "8000:2368"
+        restart: always
+        environment:
+            NODE_ENV: production
+
+volumes:
+    mysql_data: {}

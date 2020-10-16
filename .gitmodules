@@ -1,0 +1,6 @@
+[submodule "bin/tools"]
+	path = bin/tools
+	url = https://github.com/TangoMan75/tools
+[submodule "bin/provisions"]
+	path = bin/provisions
+	url = https://github.com/TangoMan75/provisions

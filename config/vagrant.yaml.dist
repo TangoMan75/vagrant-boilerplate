@@ -1,0 +1,45 @@
+bionic:
+    # virtual box name
+    box_name: bionic
+
+    # virtual box type, see available images here: https://app.vagrantup.com/boxes/search
+    box_type: ubuntu/bionic64
+
+    # show virtual box gui
+    show_gui: false
+
+    # vram amount
+    video_memory_mo: 128
+
+    # vm disk size, virtualbox default size is 10GB
+    disk_size: default
+
+    # vm allocated memory (in mo)
+    memory_limit_mo: default
+
+    # vm cpu number
+    cpu_number: default
+
+    # vm private ip address (choose carefully as it may cause conflicts)
+    host_only_ip: 10.10.10.10
+
+    # virtual box internal network ip address (allowing to share between virtual machines)
+    intnet_ip: 192.168.1.1
+
+    # public ip address (public network ip)
+    public_ip: 192.168.0.50
+
+    # public network host interface, valid options are: enp0s31f6, wlp2s0
+    bridge: enp0s31f6
+
+    # local folder to be shared with vm
+    host_shared_folder: /home/`whoami`/shared/`box_name`/
+
+    # synced guest folder
+    guest_shared_folder: /shared/
+
+    # enable nfs file sharing
+    nfs_share: false
+
+    # provisioning methods for the guest
+    provisions: ['shell', 'ansible', 'ansible_local', 'docker', 'docker_compose']

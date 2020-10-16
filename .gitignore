@@ -1,0 +1,8 @@
+*.log
+.vagrant
+.DS_Store
+config/vagrant.yaml
+
+IE8 - Win7.box
+IE8.Win7.Vagrant.zip
+osx-sierra-0.3.1.box
